@@ -1,0 +1,11 @@
+Trips:
+id, numeroPassageiros, distanciaPercorrida, date, tempoCorrida, vendorId, dinheiroTotal, payment_type, gorjeta, diaDaSemana,
+pickup_lat, pickup_long, dropoff_lat, dropoff_long
+
+
+Vendors:
+vendor_id, name, address, city, state, zip, country, contact, current
+
+
+Payment:
+payment_type, payment_lookup

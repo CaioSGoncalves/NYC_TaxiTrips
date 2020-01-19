@@ -1,0 +1,64 @@
+1. Qual a distância média percorrida por viagens com no máximo 2 passageiros:
+R:
+
+SELECT mean(t.distancia) FROM trip as t WHERE t.numeroPassageiros <= 2;
+
+
+2. Quais os 3 maiores vendors em quantidade total de dinheiro arrecadado:
+R:
+
+SELECT v.id, v.name, SUM(t.dinheiroTotal) as total
+FROM trip as trip 
+LEFT JOIN vendors as v ON v.id = t.vendorId
+GROUP BY t.vendorId
+ORDER BY total DESC
+LITMI 3;
+
+
+3. Faça um histograma da distribuição mensal, nos 4 anos, de corridas pagas em dinheiro:
+R:
+
+SELECT COUNT(t.id)
+FROM trip as t
+INNER JOIN payment as p ON p.payment_type = t.payment_type
+WHERE 
+    year(t.date) >= (2020 - 4)
+    AND p.payment_lookup = 'Cash';
+# histogram per month maybe needs a GROUP BY clause
+
+
+4. Faça um gráfico de série temporal contando a quantidade de gorjetas de cada dia, nos
+últimos 3 meses de 2012:
+R:
+
+SELECT COUNT(t.id) or SUM(t.gorjetas)
+FROM trip as t
+WHERE 
+    year(t.date) = 2012
+    AND month(t.date) >= 10
+    AND t.gorjetas > 0;
+
+5. Extras
+- Qual o tempo médio das corridas nos dias de sábado e domingo:
+R:
+
+SELECT mean(t.tempoCorrida)
+FROM trip as t
+WHERE dayofweek(t.date) = 7 or dayofweek(t.date) = 1;
+
+# dayofweek(t.date) IN (7, 1)
+# https://stackoverflow.com/questions/3074713/in-vs-or-in-the-sql-where-clause
+
+
+-Fazer uma visualização em mapa com latitude e longitude de pickups and dropoffs no ano
+de 2010:
+R:
+
+# zeppelin-leaflet: https://volumeintegration.com/zeppelin_mapping_easy/
+# or GeoSpark: https://datasystemslab.github.io/GeoSpark/tutorial/zeppelin/
+
+SELECT t.id, t.pickup_lat, t.pickup_long, t.dropoff_lat, t.dropoff_long
+FROM trip as t
+WHERE year(t.date) = 2010;
+
+# multiple lat and long?

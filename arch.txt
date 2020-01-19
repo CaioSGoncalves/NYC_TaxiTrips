@@ -1,0 +1,6 @@
+Batch:
+Cloud Storage -> Cloud Dataproc -> Apache Zeppelin + Spark + Delta Lake -> Queries and Visualizations
+
+
+Streaming:
+Cloud Pub/Sub -> Apache Zeppelin + Spark + Delta Lake -> Queries and Visualizations
