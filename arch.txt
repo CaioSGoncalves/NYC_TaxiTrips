@@ -4,3 +4,7 @@ Cloud Storage -> Cloud Dataproc -> Apache Zeppelin + Spark + Delta Lake -> Queri
 
 Streaming:
 Cloud Pub/Sub -> Apache Zeppelin + Spark + Delta Lake -> Queries and Visualizations
+
+
+
+gcloud beta dataproc clusters create cluster-fb19 --enable-component-gateway --region southamerica-east1 --subnet default --zone southamerica-east1-a --single-node --master-machine-type n1-standard-4 --master-boot-disk-size 200 --image-version 1.4-debian9 --optional-components ZEPPELIN --project sincere-bongo-264115
