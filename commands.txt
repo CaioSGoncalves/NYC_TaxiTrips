@@ -27,8 +27,27 @@ export SPARK_SUBMIT_OPTIONS="--packages io.delta:delta-core_2.11:0.5.0,org.apach
 
 
 KAFKA VM in GCP Marketplace:
-kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic nyc_trips
 kafka-topics.sh --list --zookeeper localhost:2181
 
 kafka-console-producer.sh --broker-list localhost:9092 --topic test
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+
+gsutil cp -R gs://teste-caio/nyctaxi_trips/generate_trips/ .    
+
+
+
+mysql --host=34.95.135.223 --user=root --password
+
+GRAFANA:
+grafana-cli admin reset-admin-password --homepath "/usr/share/grafana" --config "/etc/grafana/grafana.ini" admin
+sudo grafana-cli plugins install grafana-worldmap-panel
+
+sudo service grafana-server start
+
+
+Kafka-Python TripGenerator
+sudo apt-get install python3-pip
+sudo pip3 install kafka-python
+sudo pip3 install flask
+
