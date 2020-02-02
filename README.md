@@ -1,8 +1,10 @@
 # NYC_TaxiTrips
-Data pipelines com a base de dados sobre corridas de táxi em Nova York
+Pipeline de dados utilizando o dataset sobre corridas de táxi em Nova York, com o objetivo de responder as perguntas listadas no arquivo "questions.txt".
+
+O projeto foi implementado dentro da Google Cloud Platform com algumas limitações do período gratuito.
 
 Os notebooks do Zeppelin se encontram na pasta "zeppelin_notebooks". 
-Na pasta "spark_code" há os mesmo conteúdo dos notebooks em txt, para visualizar sem a necessidade de abrir no Zeppelin.
+Na pasta "spark_code" há o mesmo conteúdo dos notebooks em formato txt, para visualizar sem a necessidade de abrir no Zeppelin.
 
 O código do servidor Python/Flask responsável por gerar registros de "trips" no Kafka se encontra na pasta "generate_trips".
 
