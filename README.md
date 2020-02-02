@@ -10,7 +10,7 @@ O código do servidor Python/Flask responsável por gerar registros de "trips" n
 
 **Questões**:
 
-As questôes se encontram no arquivo "questions.txt"
+As questões se encontram no arquivo "questions.txt"
 
 **Respostas**:
 - Acesse o dashboard do Grafana pela url: https://34.87.253.30:3000/d/D800QM8Wz/nyc_trips?orgId=1&from=1580684239592&to=1580684539592&refresh=10s
