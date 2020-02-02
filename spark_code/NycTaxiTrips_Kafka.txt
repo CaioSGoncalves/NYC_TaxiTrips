@@ -1,0 +1,53 @@
+%pyspark
+# READING STREAMING DATA FROM KAFKA
+df = spark \
+  .readStream \
+  .format("kafka") \
+  .option("kafka.bootstrap.servers", "10.158.0.57:9092") \
+  .option("subscribe", "nyc_trips") \
+  .load()
+
+
+%pyspark
+from pyspark.sql.types import *
+from pyspark.sql.functions import *
+
+# SETTING SCHEMA AND FORMATTING STREAMING DATA
+
+schema = StructType([ 
+                    StructField("dropoff_datetime",StringType(),True),
+                    StructField("dropoff_latitude",DoubleType(),True),
+                    StructField("dropoff_longitude",DoubleType(),True),
+                    StructField("fare_amount",DoubleType(),True),
+                    StructField("passenger_count",LongType(),True),
+                    StructField("payment_type",StringType(),True),
+                    StructField("pickup_datetime",StringType(),True),
+                    StructField("pickup_latitude",DoubleType(),True),
+                    StructField("pickup_longitude",DoubleType(),True),
+                    StructField("rate_code",StringType(),True),
+                    StructField("store_and_fwd_flag",LongType(),True),
+                    StructField("surcharge",DoubleType(),True),
+                    StructField("tip_amount",DoubleType(),True),
+                    StructField("tolls_amount",DoubleType(),True),
+                    StructField("total_amount",DoubleType(),True),
+                    StructField("trip_distance",DoubleType(),True),
+                    StructField("vendor_id",StringType(),True)
+                    ])
+ 
+data = df.selectExpr("CAST(value AS STRING)")\
+        .select(from_json("value", schema).alias("data")).select("data.*")
+
+
+%pyspark
+def foreach_batch_function(df, epoch_id):
+    df.write \
+    .format("jdbc") \
+    .option("driver", "com.mysql.jdbc.Driver") \
+    .option("url", "jdbc:mysql://34.95.135.223/nyc_trips") \
+    .option("dbtable", "extra3") \
+    .mode("append") \
+    .option("user", "root") \
+    .option("password", "12345") \
+    .save()
+    
+(data.writeStream.foreachBatch(foreach_batch_function).start())

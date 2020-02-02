@@ -1,0 +1,191 @@
+%pyspark
+trip = spark.read.format('delta').load("gs://teste-caio/nyctaxi_trips/delta/trip")
+trip.registerTempTable("trip")
+
+
+%pyspark
+vendor = spark.read.format('delta').load("gs://teste-caio/nyctaxi_trips/delta/vendor")
+vendor.registerTempTable("vendor")
+
+
+%pyspark
+payment = spark.read.format('delta').load("gs://teste-caio/nyctaxi_trips/delta/payment")
+payment.registerTempTable("payment")
+
+
+%sql
+/* QUESTION 1 */
+SELECT mean(t.trip_distance) as distanciaMedia FROM trip as t WHERE t.passenger_count <= 2
+
+%pyspark
+# QUESTION 1 INSERT
+question1 = spark.sql("SELECT mean(t.trip_distance) as distanciaMedia FROM trip as t WHERE t.passenger_count <= 2")
+question1.write \
+    .format("jdbc") \
+    .option("driver", "com.mysql.jdbc.Driver") \
+    .option("url", "jdbc:mysql://34.95.135.223/nyc_trips") \
+    .option("dbtable", "question1") \
+    .mode("append") \
+    .option("user", "root") \
+    .option("password", "12345") \
+    .save()
+
+
+
+%sql
+/* QUESTION 2 */
+SELECT v.vendor_id as vendorId, v.name as vendorName, SUM(t.total_amount) as dinheiroTotal
+FROM trip as t 
+LEFT JOIN vendor as v ON v.vendor_id = t.vendor_id
+GROUP BY v.vendor_id, v.name
+ORDER BY dinheiroTotal DESC
+LIMIT 3
+
+%pyspark
+# QUESTION 2 INSERT
+query2 = """
+SELECT v.vendor_id as vendorId, v.name as vendorName, SUM(t.total_amount) as dinheiroTotal
+FROM trip as t 
+LEFT JOIN vendor as v ON v.vendor_id = t.vendor_id
+GROUP BY v.vendor_id, v.name
+ORDER BY dinheiroTotal DESC
+LIMIT 3
+"""
+question2 = spark.sql(query2)
+question2.write \
+    .format("jdbc") \
+    .option("driver", "com.mysql.jdbc.Driver") \
+    .option("url", "jdbc:mysql://34.95.135.223/nyc_trips") \
+    .option("dbtable", "question2") \
+    .mode("append") \
+    .option("user", "root") \
+    .option("password", "12345") \
+    .save()
+
+
+
+%sql
+/* QUESTION 3 */
+SELECT  month(t.dropoff_datetime) as month, year(t.dropoff_datetime) as year, COUNT(0) as total
+FROM trip as t
+INNER JOIN payment as p ON p.payment_type = t.payment_type
+WHERE p.payment_lookup = 'Cash'
+GROUP BY 
+    month, year
+ORDER BY
+    year, month
+
+%pyspark
+# QUESTION 3 INSERT
+query3 = """
+SELECT  month(t.dropoff_datetime) as month, year(t.dropoff_datetime) as year, COUNT(0) as total
+FROM trip as t
+INNER JOIN payment as p ON p.payment_type = t.payment_type
+WHERE p.payment_lookup = 'Cash'
+GROUP BY 
+    month, year
+ORDER BY
+    year, month
+"""
+question3 = spark.sql(query3)
+question3.write \
+    .format("jdbc") \
+    .option("driver", "com.mysql.jdbc.Driver") \
+    .option("url", "jdbc:mysql://34.95.135.223/nyc_trips") \
+    .option("dbtable", "question3") \
+    .mode("append") \
+    .option("user", "root") \
+    .option("password", "12345") \
+    .save()
+
+
+
+%sql
+/* QUESTION 4 */
+SELECT day(t.dropoff_datetime) as day, month(t.dropoff_datetime) as month, COUNT(0) as quantidadeTotal, SUM(t.tip_amount) as valorTotal
+FROM trip as t
+WHERE 
+    year(t.dropoff_datetime) = 2012
+    AND month(t.dropoff_datetime) >= 10
+    AND t.tip_amount > 0
+GROUP BY 
+    day, month
+ORDER BY
+    month, day
+
+%pyspark
+# QUESTION 4 INSERT
+query4 = """
+SELECT day(t.dropoff_datetime) as day, month(t.dropoff_datetime) as month, COUNT(0) as quantidadeTotal, SUM(t.tip_amount) as valorTotal
+FROM trip as t
+WHERE 
+    year(t.dropoff_datetime) = 2012
+    AND month(t.dropoff_datetime) >= 10
+    AND t.tip_amount > 0
+GROUP BY 
+    day, month
+ORDER BY
+    month, day
+"""
+question4 = spark.sql(query4)
+question4.write \
+    .format("jdbc") \
+    .option("driver", "com.mysql.jdbc.Driver") \
+    .option("url", "jdbc:mysql://34.95.135.223/nyc_trips") \
+    .option("dbtable", "question4") \
+    .mode("append") \
+    .option("user", "root") \
+    .option("password", "12345") \
+    .save()
+    
+
+
+%sql
+/* EXTRA 1 */
+SELECT mean( unix_timestamp(timestamp(t.dropoff_datetime)) - unix_timestamp(timestamp(t.pickup_datetime)) ) as tempoMedioSegundos
+FROM trip as t
+WHERE dayofweek(t.dropoff_datetime) = 7 or dayofweek(t.dropoff_datetime) = 1
+
+%pyspark
+# EXTRA 1 INSERT
+query_extra1 = """
+SELECT mean( unix_timestamp(timestamp(t.dropoff_datetime)) - unix_timestamp(timestamp(t.pickup_datetime)) ) as tempoMedioSegundos
+FROM trip as t
+WHERE dayofweek(t.dropoff_datetime) = 7 or dayofweek(t.dropoff_datetime) = 1
+"""
+extra1 = spark.sql(query_extra1)
+extra1.write \
+    .format("jdbc") \
+    .option("driver", "com.mysql.jdbc.Driver") \
+    .option("url", "jdbc:mysql://34.95.135.223/nyc_trips") \
+    .option("dbtable", "extra1") \
+    .mode("append") \
+    .option("user", "root") \
+    .option("password", "12345") \
+    .save()
+
+
+
+%sql
+/* EXTRA 2 */
+SELECT t.pickup_longitude, t.pickup_latitude, t.dropoff_longitude, t.dropoff_latitude
+FROM trip as t
+WHERE year(t.dropoff_datetime) = 2010
+
+%pyspark
+# EXTRA 2 INSERT
+query_extra2 = """
+SELECT t.pickup_longitude, t.pickup_latitude, t.dropoff_longitude, t.dropoff_latitude
+FROM trip as t
+WHERE year(t.dropoff_datetime) = 2010
+"""
+extra2 = spark.sql(query_extra2)
+extra2.write \
+    .format("jdbc") \
+    .option("driver", "com.mysql.jdbc.Driver") \
+    .option("url", "jdbc:mysql://34.95.135.223/nyc_trips") \
+    .option("dbtable", "extra2") \
+    .mode("append") \
+    .option("user", "root") \
+    .option("password", "12345") \
+    .save()
