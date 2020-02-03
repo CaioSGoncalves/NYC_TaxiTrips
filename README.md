@@ -27,6 +27,6 @@ As questões se encontram no arquivo "questions.txt"
 
 Com o dashboard do Grafana aberto faça o seguinte procedimento:
 - Observe o mapa do painel "Extra 3"
-- Faça uma requisição GET pela url: http://34.87.253.30:5000/push-trips
+- Faça uma requisição GET para o gerador de "trips"
 - Irá produzir 2 registros de trips no Kafka
 - Visualize no dashboard as novas coordenadas no mapa
