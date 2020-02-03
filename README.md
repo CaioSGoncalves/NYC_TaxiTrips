@@ -7,7 +7,7 @@ O projeto foi implementado dentro da Google Cloud Platform com algumas limitaç�
 
 ![Answers](diagrams/Answers.png)
 
-![Streaming](diagrams/Answers.png)
+![Streaming](diagrams/Streaming.png)
 
 Os notebooks do Zeppelin se encontram na pasta "zeppelin_notebooks". 
 Na pasta "spark_code" há o mesmo conteúdo dos notebooks em formato txt, para visualizar sem a necessidade de abrir no Zeppelin.
