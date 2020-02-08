@@ -30,3 +30,6 @@ Com o dashboard do Grafana aberto faça o seguinte procedimento:
 - Faça uma requisição GET para o gerador de "trips"
 - Irá produzir 2 registros de trips no Kafka
 - Visualize no dashboard as novas coordenadas no mapa
+
+
+Se tiver interesse em ver o resultado final no Grafana favor enviar email para caiosgon3@gmail.com
